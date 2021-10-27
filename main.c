@@ -10,7 +10,7 @@
 
 void main (void) {
 
-		DDRB |= (1 << LED_PIN); // set pin as input
+		//DDRB |= (1 << LED_PIN); // set pin as input
         uart_init();
         
 		//const char arr[] = "Asma";
@@ -18,13 +18,14 @@ void main (void) {
 		
 		while (1)
 		{
-			PORTB ^= (1 << LED_PIN);
-			uart_putstr("ASMA\n");
+			//PORTB ^= (1 << LED_PIN);
+			//uart_putstr("ASMA\n");
 			
-		     uart_putchar('O');
-			 uart_putchar('N');
-			 uart_putchar('\n');
+		    // uart_putchar('O');
+			// uart_putchar('N');
+			// uart_putchar('\n');
+			 uart_echo();
 			
-			_delay_ms(500);
+		//	_delay_ms(500);
 		}
 }

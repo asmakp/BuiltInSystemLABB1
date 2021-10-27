@@ -1,10 +1,12 @@
 #include <avr/io.h>
+#include <stdio.h> 
 #include <util/delay.h>
 #define FOSC 16000000UL
 #define BAUD 38400
 #define MYUBRR (FOSC/(16UL*BAUD)-1)
 
 #include "serial.h"
+char INPUT[255];
 
 void uart_init(void){
     //ATmega 328p Datasheet page 185 Ca 20.5
@@ -35,14 +37,13 @@ void uart_putchar(char chr)
      while (!(UCSR0A & (1<<UDRE0)))
     ;
      /* Put data into buffer(USART Data Register), sends the data */
-      UDR0 = chr;
-      if(chr == '\n')
+      
+     if(chr == '\n')
        { 
           uart_putchar('\r');
 
-        }
-     
-    
+        }     
+    UDR0 = chr;
 }
 void uart_putstr(const char *str){
    
@@ -62,4 +63,31 @@ void uart_putstr(const char *str){
         uart_putchar(ch);
         str++;
     }*/
+}
+
+char uart_getchar(void){
+ // received character in a first-in-first out (FIFO) buffer   
+//Wait for data to be received 
+while ( !(UCSR0A & (1<<RXC0)) )
+;
+ 
+ //If the input char is a newline(In linux , when enter is pressed it is read as c)
+ //https://askubuntu.com/questions/441744/pressing-enter-produces-m-instead-of-a-newline
+ //$ stty -a  ----> and then
+ //$ stty -icrnl   "turn carriage returns into newlines”.
+if(UDR0 == 13){
+
+return UDR0 = '\n';
+}
+    //Get and return received data from buffer
+    return UDR0;
+}
+
+void uart_echo(void){
+
+
+    char  data = uart_getchar();
+     uart_putchar(data);
+ 
+    
 }
