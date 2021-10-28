@@ -4,14 +4,15 @@
 //#define BAUD 9600
 //#define MYUBRR (FOSC/(16*BAUD)-1)
 
-#define LED_PIN 1
+#define LED_PIN 3
 
 #include "serial.h"
 
 void main (void) {
 
-		//DDRB |= (1 << LED_PIN); // set pin as input
+		DDRB |= (1 << LED_PIN); // set pin as input
         uart_init();
+		//char DATA[255];
         
 		//const char arr[] = "Asma";
 		//uart_putstr("ASMA\n");
@@ -25,7 +26,21 @@ void main (void) {
 			// uart_putchar('N');
 			// uart_putchar('\n');
 			 uart_echo();
+			//uart_echo();
+
+			int result = Led_on_off();
+
+			if(result == 1){
+				
+				PORTB &= ~(1<<LED_PIN);
+			}
 			
-		//	_delay_ms(500);
+			else if(result == 0) {
+				PORTB |= (1<<LED_PIN);
+			}
+
+			
+			
+			//_delay_ms(200);
 		}
 }

@@ -1,12 +1,16 @@
 #include <avr/io.h>
-#include <stdio.h> 
+#include <string.h> 
 #include <util/delay.h>
 #define FOSC 16000000UL
 #define BAUD 38400
 #define MYUBRR (FOSC/(16UL*BAUD)-1)
 
 #include "serial.h"
+//#define LED_PIN 3
+
 char INPUT[255];
+int cntr =0;
+char ch1;
 
 void uart_init(void){
     //ATmega 328p Datasheet page 185 Ca 20.5
@@ -37,13 +41,15 @@ void uart_putchar(char chr)
      while (!(UCSR0A & (1<<UDRE0)))
     ;
      /* Put data into buffer(USART Data Register), sends the data */
-      
-     if(chr == '\n')
+      UDR0 = chr; 
+      // if(chr =='\n')
+     if(chr =='\r')
        { 
-          uart_putchar('\r');
+          uart_putchar('\n');
+         // uart_putchar('\r');
 
         }     
-    UDR0 = chr;
+    //UDR0 = chr;
 }
 void uart_putstr(const char *str){
    
@@ -74,20 +80,70 @@ while ( !(UCSR0A & (1<<RXC0)) )
  //If the input char is a newline(In linux , when enter is pressed it is read as c)
  //https://askubuntu.com/questions/441744/pressing-enter-produces-m-instead-of-a-newline
  //$ stty -a  ----> and then
- //$ stty -icrnl   "turn carriage returns into newlines”.
-if(UDR0 == 13){
+ //$ stty -icrnl   "turn carriage returns into newlines”
+//if(UDR0 == 13){
 
-return UDR0 = '\n';
-}
+//return UDR0 = '\n';
+//}
     //Get and return received data from buffer
     return UDR0;
+}
+void readchar(void){
+    //char INPUT[255];
+   // char ch1;
+   // int cntr = 0;
+    ch1 = uart_getchar();
+    if(ch1 == 13)
+    {   
+        INPUT[cntr] = ch1;
+        cntr++;
+        INPUT[cntr] ='\n';
+        INPUT[++cntr] = '\0';
+        cntr = 0;
+        return;
+    }
+    else if (ch1 >= 47){
+        INPUT[cntr] = ch1;
+        cntr++;
+
+    }
 }
 
 void uart_echo(void){
 
-
-    char  data = uart_getchar();
-     uart_putchar(data);
+   int j;
+    readchar();
+  //  Led_on_off();
+  // if (INPUT[sizeof(INPUT)-1] == '\0'){
+  //for(j=0; j !=sizeof(INPUT); j++){
+  //for(j=0; j != sizeof(INPUT); j++){
+    /*char  data = uart_getchar();
+     uart_putchar(data);*/
+     // if(INPUT[j] != 0 )
+     // {
+   // uart_putchar(INPUT[j]);
+   //uart_putstr(INPUT); 
+    uart_putchar(ch1);
+    // }
+    //  else{
+         // uart_putstr("\r\n");
+     //     break;
+    // }
+ // }
  
-    
+ //  INPUT[++j] ='\0';
+}
+
+int Led_on_off(){
+    	
+    if((strcmp(INPUT,"on\r\n") == 0) || (strcmp(INPUT,"ON\r\n") == 0))
+			{
+                return 1;
+				//PORTB |= (1 << LED_PIN);
+			}
+			else if((strcmp(INPUT,"off\r\n") == 0) || (strcmp(INPUT,"OFF\r\n") == 0))
+			{
+                return 0;
+				//PORTB &= ~(1 << LED_PIN);
+			}
 }
