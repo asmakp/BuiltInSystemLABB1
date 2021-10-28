@@ -8,7 +8,7 @@
 #include "serial.h"
 
 // Buffer to store thr typed characters
-char INPUT_BUFF[255];   
+char INPUT_BUFF[20];   
 int Buff_Index =0;
 
 //variable to hold the entered char
@@ -117,7 +117,13 @@ void read_line(void){
     }
     else if (InputChar >= 47){                   //so that charaters only above ascii value 47 to be stored. 
         INPUT_BUFF[Buff_Index] = InputChar;
-        Buff_Index++;
+        if(Buff_Index >= 20){                 //checking if the buffer reached max size
+          Buff_Index = 0;                     // if max size reached reset it to zero
+        }
+        else{ 
+            Buff_Index++;
+        }
+        
 
     }
 }
