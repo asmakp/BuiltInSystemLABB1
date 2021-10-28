@@ -12,8 +12,8 @@ Archive member included to satisfy reference by file (symbol)
 Allocating common symbols
 Common symbol       size              file
 
-INPUT               0xff              serial.o
-ch1                 0x1               serial.o
+InputChar           0x1               serial.o
+INPUT_BUFF          0xff              serial.o
 
 Memory Configuration
 
@@ -230,7 +230,7 @@ END GROUP
                 0x00000000000000c8                uart_putchar
                 0x00000000000000de                uart_putstr
                 0x0000000000000104                uart_getchar
-                0x0000000000000112                readchar
+                0x0000000000000112                read_line
                 0x0000000000000166                uart_echo
                 0x0000000000000184                Led_on_off
  .text          0x00000000000001d2        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
@@ -337,7 +337,7 @@ END GROUP
  .bss           0x0000000000800116        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega328p.o
  .bss           0x0000000000800116        0x0 main.o
  .bss           0x0000000000800116        0x2 serial.o
-                0x0000000000800116                cntr
+                0x0000000000800116                Buff_Index
  .bss           0x0000000000800118        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
  .bss           0x0000000000800118        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_copy_data.o)
  .bss           0x0000000000800118        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_clear_bss.o)
@@ -345,8 +345,8 @@ END GROUP
  *(.bss*)
  *(COMMON)
  COMMON         0x0000000000800118      0x100 serial.o
-                0x0000000000800118                INPUT
-                0x0000000000800217                ch1
+                0x0000000000800118                InputChar
+                0x0000000000800119                INPUT_BUFF
                 0x0000000000800218                PROVIDE (__bss_end, .)
                 0x0000000000000214                __data_load_start = LOADADDR (.data)
                 0x000000000000022a                __data_load_end = (__data_load_start + SIZEOF (.data))
@@ -383,9 +383,9 @@ END GROUP
  .stab          0x0000000000000570      0x708 serial.o
                                         0x8d0 (size before relaxing)
 
-.stabstr        0x0000000000000000      0xe1a
+.stabstr        0x0000000000000000      0xe2c
  *(.stabstr)
- .stabstr       0x0000000000000000      0xe1a main.o
+ .stabstr       0x0000000000000000      0xe2c main.o
 
 .stab.excl
  *(.stab.excl)

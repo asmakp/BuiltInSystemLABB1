@@ -8,15 +8,11 @@ void uart_putstr(const char *str);
 
 char uart_getchar(void);
 
-//void uart_echo(void);
-//void uart_echo(char *str);
-void readchar(void);
-//void readchar(char *str);
+void uart_echo(void);
+
+void read_line(void);
+
 int Led_on_off(void);
 //void blink(void);
-//void uart_output(char *str);
-
-//void readchar(void);
-
 #endif
 
