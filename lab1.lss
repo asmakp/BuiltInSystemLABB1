@@ -59,9 +59,9 @@ Contents of section .text:
  01b0 892b99f0 6ae071e0 89e191e0 0e940701  .+..j.q.........
  01c0 9c01892b 61f060e1 71e089e1 91e00e94  ...+a.`.q.......
  01d0 07019c01 892b19f0 089521e0 30e0c901  .....+....!.0...
- 01e0 0895239a 0e945300 0e94bb00 0e94ca00  ..#...S.........
- 01f0 81309105 51f0892b b9f72b9a 0e94bb00  .0..Q..+..+.....
- 0200 0e94ca00 81309105 b1f72b98 edcffb01  .....0....+.....
+ 01e0 0895229a 0e945300 0e94bb00 0e94ca00  .."...S.........
+ 01f0 81309105 51f0892b b9f72a9a 0e94bb00  .0..Q..+..*.....
+ 0200 0e94ca00 81309105 b1f72a98 edcffb01  .....0....*.....
  0210 dc018d91 01908019 0110d9f3 990b0895  ................
  0220 f894ffcf                             ....            
 Contents of section .stab:
@@ -819,7 +819,7 @@ Disassembly of section .text:
 
      //UBRR0 = MYUBRR;
 
-    //  Setting frame formate .8N1- 8 bit data and 1 parity
+    //  Setting frame formate .8N1- 8 bit data and no parity 
     //Frame formate controlled by USART control status register C 
     UCSR0C |= (1<< UCSZ01) | (1<< UCSZ00);
   b6:	e2 ec       	ldi	r30, 0xC2	; 194
@@ -827,7 +827,7 @@ Disassembly of section .text:
   ba:	80 81       	ld	r24, Z
   bc:	86 60       	ori	r24, 0x06	; 6
   be:	80 83       	st	Z, r24
-    UCSR0C &= ~_BV(USBS0);  // setting parity bit with 0 means 1 bit parity
+    UCSR0C &= ~_BV(USBS0);  // setting stop bit with 0 means i stop bit 
   c0:	80 81       	ld	r24, Z
   c2:	87 7f       	andi	r24, 0xF7	; 247
   c4:	80 83       	st	Z, r24
@@ -979,11 +979,11 @@ void read_line(void){
  134:	e7 5e       	subi	r30, 0xE7	; 231
  136:	fe 4f       	sbci	r31, 0xFE	; 254
  138:	80 83       	st	Z, r24
-        if(Buff_Index >= 20){
+        if(Buff_Index >= 20){                 //checking if the buffer reached max size
  13a:	24 31       	cpi	r18, 0x14	; 20
  13c:	31 05       	cpc	r19, r1
  13e:	b4 f4       	brge	.+44     	; 0x16c <read_line+0x5a>
-          Buff_Index = 0;  
+          Buff_Index = 0;                     // if max size reached reset it to zero
         }
         else{ 
             Buff_Index++;
@@ -1020,8 +1020,8 @@ void read_line(void){
     }
     else if (InputChar >= 47){                   //so that charaters only above ascii value 47 to be stored. 
         INPUT_BUFF[Buff_Index] = InputChar;
-        if(Buff_Index >= 20){
-          Buff_Index = 0;  
+        if(Buff_Index >= 20){                 //checking if the buffer reached max size
+          Buff_Index = 0;                     // if max size reached reset it to zero
  16c:	10 92 17 01 	sts	0x0117, r1	; 0x800117 <__data_end+0x1>
  170:	10 92 16 01 	sts	0x0116, r1	; 0x800116 <__data_end>
  174:	08 95       	ret
@@ -1111,7 +1111,7 @@ void main (void)
  {
 
 	DDRB |= (1 << LED_PIN); // set pin as input, portB pin pin 11
- 1e2:	23 9a       	sbi	0x04, 3	; 4
+ 1e2:	22 9a       	sbi	0x04, 2	; 4
     uart_init();
  1e4:	0e 94 53 00 	call	0xa6	; 0xa6 <uart_init>
 		// uart_putchar('\n');
@@ -1138,7 +1138,7 @@ void main (void)
  1f6:	89 2b       	or	r24, r25
  1f8:	b9 f7       	brne	.-18     	; 0x1e8 <main+0x6>
 				PORTB |= (1<<LED_PIN);
- 1fa:	2b 9a       	sbi	0x05, 3	; 5
+ 1fa:	2a 9a       	sbi	0x05, 2	; 5
 		// uart_putchar('\n');
 
 		//uart_putstr("ASMA\n");
@@ -1157,7 +1157,7 @@ void main (void)
  208:	b1 f7       	brne	.-20     	; 0x1f6 <main+0x14>
 				
 				PORTB &= ~(1<<LED_PIN);
- 20a:	2b 98       	cbi	0x05, 3	; 5
+ 20a:	2a 98       	cbi	0x05, 2	; 5
  20c:	ed cf       	rjmp	.-38     	; 0x1e8 <main+0x6>
 
 0000020e <strcmp>:

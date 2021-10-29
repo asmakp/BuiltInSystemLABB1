@@ -33,10 +33,10 @@ void uart_init(void){
 
      //UBRR0 = MYUBRR;
 
-    //  Setting frame formate .8N1- 8 bit data and 1 parity
+    //  Setting frame formate .8N1- 8 bit data and no parity 
     //Frame formate controlled by USART control status register C 
     UCSR0C |= (1<< UCSZ01) | (1<< UCSZ00);
-    UCSR0C &= ~_BV(USBS0);  // setting parity bit with 0 means 1 bit parity
+    UCSR0C &= ~_BV(USBS0);  // setting stop bit with 0 means i stop bit 
 
 }
 

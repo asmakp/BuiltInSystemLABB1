@@ -1,7 +1,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
-#define LED_PIN 3
+#define LED_PIN 2
 
 #include "serial.h"
 
